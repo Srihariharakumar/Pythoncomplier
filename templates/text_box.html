@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Assessment</title>
+    <style>
+        h2.question {
+            width: 1400px;
+            align-items: center;
+            padding-left: 37px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .container {
+            align-items: center;
+        }
+        textarea.coding_box {
+            border: solid;
+            border-radius: 10px;
+            width: 95%;
+            padding: 10px;
+            height: 500px;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: rgb(252, 252, 252);
+            border-color: rgba(96, 96, 237, 0.482);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #timer {
+            font-size: 20px;
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2 class="question" id="question"></h2>
+    <div class="container">
+        <label><h3>Answer:</h3></label>
+        <textarea class="coding_box" placeholder="Your answer/code"></textarea>
+        <button onclick="getNextQuestion()">NEXT</button>
+        <button onclick="saveAnswer()">SAVE ANSWER</button>
+        <div id="timer"></div>
+    </div>
+
+    <script>
+        let questionIndex = 1;
+
+        function startTimer(duration, display) {
+            var timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    alert("Time's up!");
+                    window.location.reload();
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            var minutes = 5;
+            var duration = 60 * minutes;
+            var display = document.getElementById('timer');
+            startTimer(duration, display);
+            getNextQuestion();
+        };
+
+        function getNextQuestion() {
+            fetch('/get_next_question')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('question').textContent = "Q" + questionIndex + ": " + data.question;
+                })
+                .catch(error => console.error('Error fetching next question:', error));
+        }
+
+        function saveAnswer() {
+            const answer = document.querySelector('.coding_box').value;
+            const currentQuestion = document.getElementById('question').textContent;
+            const questionNumber = currentQuestion.split(':')[0].replace('Q', '').trim();
+            fetch('/save_answer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ answer, question: currentQuestion, question_number: questionNumber }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Answer saved:', data);
+                questionIndex++; // Increment questionIndex after saving the answer
+                getNextQuestion(); // Get the next question after saving the answer
+            })
+            .catch(error => console.error('Error saving answer:', error));
+        }
+    </script>
+</body>
+</html>

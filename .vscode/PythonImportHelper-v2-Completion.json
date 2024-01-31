@@ -1,0 +1,97 @@
+[
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "Flask",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "render_template",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "request",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "jsonify",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
+        "label": "save_document_as_json",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def save_document_as_json(user_answers):\n    try:\n        with open('user_answers.json', 'r') as json_file:\n            existing_data = json.load(json_file)\n    except FileNotFoundError:\n        existing_data = {}\n    existing_data.update(user_answers)\n    with open('user_answers.json', 'w') as json_file:\n        json.dump(existing_data, json_file, indent=4)\n# Routes",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "home",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def home():\n    ran_home = random.randint(0, len(data['python']) - 1)\n    global initial_question\n    initial_question = data['python'][str(ran_home)]\n    return render_template('text_box.html', question=initial_question)\n@app.route('/get_next_question')\ndef get_next_question():\n    ran = random.randint(0, len(data['python']) - 1)\n    next_question = data['python'][str(ran)]\n    return jsonify({'question': next_question})",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "get_next_question",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def get_next_question():\n    ran = random.randint(0, len(data['python']) - 1)\n    next_question = data['python'][str(ran)]\n    return jsonify({'question': next_question})\n@app.route('/save_answer', methods=['POST'])\ndef save_answer():\n    answer = request.json.get('answer')\n    question = request.json.get('question')\n    question_number = request.json.get('question_number')\n    formatted_question = f\"{question}\"",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "save_answer",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def save_answer():\n    answer = request.json.get('answer')\n    question = request.json.get('question')\n    question_number = request.json.get('question_number')\n    formatted_question = f\"{question}\"\n    save_document_as_json({formatted_question: answer})\n    return jsonify({'message': 'Answer saved successfully'})\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=1000, debug=True)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "app = Flask(__name__)\n# Reading questions from file\nwith open(r'C:\\Users\\Arun\\Documents\\Python_assessment\\questions.json', 'r') as file:\n    data = json.load(file)\n# logic , function to save answers in JSON file\ndef save_document_as_json(user_answers):\n    try:\n        with open('user_answers.json', 'r') as json_file:\n            existing_data = json.load(json_file)\n    except FileNotFoundError:",
+        "detail": "app",
+        "documentation": {}
+    }
+]
